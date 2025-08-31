@@ -33,7 +33,7 @@ RUN chmod +x /app/pansou
 COPY --from=frontend-builder /app/dist /usr/share/nginx/html
 
 # 复制我们全新的、支持HTTPS的Nginx配置文件
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # 复制您的“内部VIP通行证”（SSL证书）
 COPY certs/ /etc/nginx/certs/
