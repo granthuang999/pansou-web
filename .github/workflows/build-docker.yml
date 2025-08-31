@@ -18,11 +18,11 @@ jobs:
       packages: write
 
     steps:
-    # 步骤1: 检出前端代码 (您的 pansou-web 仓库)
+    # 步骤1: 检出前端仓库 (pansou-web) 到工作区根目录
     - name: Checkout Frontend Repository
       uses: actions/checkout@v4
 
-    # 步骤2: 检出后端代码 (您的 pansou 仓库)
+    # 步骤2: 检出后端仓库 (pansou) 到一个名为 "backend" 的子目录
     - name: Checkout Backend Repository
       uses: actions/checkout@v4
       with:
