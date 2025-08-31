@@ -1,10 +1,8 @@
 name: Build, Push, and Deploy Docker Image
 
 on:
-  # 当您向 main 分支提交代码时自动触发
   push:
     branches: [ main ]
-  # [核心修改] 增加了这一行，允许您从Actions页面手动触发
   workflow_dispatch:
 
 env:
@@ -20,17 +18,48 @@ jobs:
       packages: write
 
     steps:
-    - name: Checkout frontend repository
+    # 步骤1: 检出前端代码 (您的 pansou-web 仓库)
+    - name: Checkout Frontend Repository
       uses: actions/checkout@v4
       with:
         path: pansou-web
 
-    - name: Checkout backend repository
+    # 步骤2: 检出后端代码 (您的 pansou 仓库)
+    - name: Checkout Backend Repository
       uses: actions/checkout@v4
       with:
         repository: granthuang999/pansou
         path: pansou
 
+    # 步骤3: 设置 Node.js 环境并构建前端
+    - name: Setup Node.js and Build Frontend
+      run: |
+        cd pansou-web/frontend
+        npm install
+        npm run build
+
+    # 步骤4: 设置 Go 环境并构建后端
+    - name: Setup Go and Build Backend
+      run: |
+        # 安装正确的 Go 版本
+        sudo apt-get update && sudo apt-get install -y golang-1.21-go
+        # 编译
+        cd pansou
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 /usr/lib/go-1.21/bin/go build -o pansou-amd64 .
+
+    # 步骤5: [核心修正] 准备Docker构建上下文
+    - name: Prepare Build Context
+      run: |
+        mkdir -p build-context
+        # 复制编译好的前端文件
+        cp -r pansou-web/frontend/dist/ build-context/frontend-dist
+        # 复制编译好的后端文件
+        cp pansou/pansou-amd64 build-context/pansou
+        # 复制Dockerfile和启动脚本
+        cp pansou-web/Dockerfile build-context/
+        cp pansou-web/start.sh build-context/
+
+    # 步骤6: 登录到GitHub容器镜像库
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
@@ -38,10 +67,12 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    # 步骤7: 构建并推送Docker镜像
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./pansou-web
+        # 使用我们准备好的构建上下文
+        context: ./build-context
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
