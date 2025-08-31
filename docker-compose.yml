@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   pansou:
-    image: ghcr.io/fish2018/pansou-web:latest
+    image: ghcr.io/granthuang999/pansou-web:latest
     container_name: pansou-app
     ports:
       - "80:80"
@@ -31,7 +31,7 @@ services:
       - pansou-data:/app/data
       - pansou-logs:/app/logs
       # SSL证书（可选）
-      # - ./ssl:/app/data/ssl
+      - ./ssl:/app/data/ssl
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/api/health"]
