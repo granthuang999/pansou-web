@@ -434,21 +434,27 @@ onUnmounted(() => {
     
     <!-- 页脚 -->
     <footer class="border-t border-border bg-background/50 backdrop-blur-sm mt-auto">
-      <div class="container mx-auto px-4 py-4">
-        <div class="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-          <a href="https://www.futuremedia.work/about.html">关于本站</a> |
+    <div id="footer"><div id="footer1">Copyright all reserved © 2025-future <a href="https://www.futuremedia.work">未来传媒</a><br>
+<a href="https://www.futuremedia.work/about.html">关于本站</a> |
 <a href="https://www.futuremedia.work/terms-of-service.html">服务条款</a> |  
 <a href="https://www.futuremedia.work/privacy-policy.html">隐私政策</a> |
-<a href="https://www.futuremedia.work/disclaimer.html">免责声明</a> <br>
-          <span>© {{ new Date().getFullYear() }}-{{ new Date().getFullYear() + 10 }}</span>
-          <a href="https://www.futuremedia.work/" target="_blank" rel="noopener noreferrer" class="hover:text-foreground transition-colors">未来传媒</a>
-          <a href="https://github.com/granthuang999" target="_blank" rel="noopener noreferrer" class="hover:text-foreground transition-colors">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-            </svg>
-          </a>
-        </div>
-      </div>
+<a href="https://www.futuremedia.work/disclaimer.html">免责声明</a> 
+</div>
+<div id="footer2">
+    <span id="runday"></span><span>本站由<a href="https://www.futuremedia.work/cdn-cgi/l/email-protection#553320212027303830313c3467656c65153238343c397b363a38" target="_blank">疯子</a>维护</span>
+</div>
+
+<script data-cfasync="false" src="https://www.futuremedia.work/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("6/4/2025"!=""){
+    var startSite=new Date("6/4/2025");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
     </footer>
   </div>
 </template>
