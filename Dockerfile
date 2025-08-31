@@ -30,8 +30,8 @@ COPY --from=backend-builder /app/pansou /app/pansou
 # [核心] 从前端构建阶段，复制编译好的前端文件到Nginx的默认网站目录
 COPY --from=frontend-builder /app/dist /usr/share/nginx/html
 
-# [核心] 复制我们之前写好的、支持HTTPS的Nginx配置文件
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# [核心] 复制我们之前写好的、支持HTTPS的Nginx配置文件到正确的主配置文件路径
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # [核心] 复制您的SSL证书
 COPY certs/ /etc/nginx/certs/
