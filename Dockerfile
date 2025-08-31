@@ -6,27 +6,12 @@ RUN apk add --no-cache ca-certificates tzdata curl
 # 设置时区
 ENV TZ=Asia/Shanghai
 
-# 设置默认环境变量
-ENV PANSOU_PORT=8888
-ENV PANSOU_HOST=127.0.0.1
+# [核心修改] 将您的SSL证书，复制到start.sh脚本期望的位置
+# 这一步会在构建镜像时，将您的证书文件永久地打包进去
+COPY certs /app/data/ssl
 
-# 默认Telegram频道配置
-ENV CHANNELS=tgsearchers3,yunpanxunlei,tianyifc,BaiduCloudDisk,txtyzy,peccxinpd,gotopan,xingqiump4,yunpanqk,PanjClub,kkxlzy,baicaoZY,MCPH01,share_aliyun,bdwpzhpd,ysxb48,jdjdn1111,yggpan,MCPH086,zaihuayun,Q66Share,NewAliPan,ypquark,Oscar_4Kmovies,ucwpzy,alyp_TV,alyp_4K_Movies,shareAliyun,alyp_1,dianyingshare,Quark_Movies,XiangxiuNBB,NewQuark,ydypzyfx,kuakeyun,ucquark,xx123pan,yingshifenxiang123,zyfb123,tyypzhpd,tianyirigeng,cloudtianyi,hdhhd21,Lsp115,oneonefivewpfx,Maidanglaocom,qixingzhenren,taoxgzy,tgsearchers115,Channel_Shares_115,tyysypzypd,vip115hot,wp123zy,yunpan139,yunpan189,yunpanuc,yydf_hzl,alyp_Animation,alyp_JLP,leoziyuan
-
-# 默认性能配置
-ENV CACHE_ENABLED=true
-ENV CACHE_TTL=3600
-ENV MAX_CONCURRENCY=200
-ENV MAX_PAGES=30
-
-# 创建应用目录
-WORKDIR /app
-
-# 获取架构信息
-ARG TARGETARCH
-
-# 复制对应架构的后端二进制文件
-COPY pansou-${TARGETARCH} /app/pansou
+# 复制后端二进制文件 (它将在构建上下文中由GitHub Action提供)
+COPY pansou-amd64 /app/pansou
 RUN chmod +x /app/pansou
 
 # 复制前端构建产物
@@ -37,10 +22,7 @@ COPY start.sh /app/
 RUN chmod +x /app/start.sh
 
 # 创建必要的目录
-RUN mkdir -p /app/data /app/logs /var/log/nginx
-
-# 创建nginx配置目录
-RUN mkdir -p /etc/nginx/conf.d
+RUN mkdir -p /app/data /app/logs /var/log/nginx /etc/nginx/conf.d
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
