@@ -436,7 +436,7 @@ onUnmounted(() => {
 <footer class="border-t border-border bg-background/50 backdrop-blur-sm mt-auto text-center">
   <div id="footer">
     <div id="footer1">
-      Copyright all reserved © <span id="copyrightYear"></span>-future 
+      Copyright all reserved © 2025-future 
       <a href="https://www.futuremedia.work">未来传媒</a><br>
       <a href="https://www.futuremedia.work/about.html">关于本站</a> |
       <a href="https://www.futuremedia.work/terms-of-service.html">服务条款</a> |  
@@ -444,8 +444,8 @@ onUnmounted(() => {
       <a href="https://www.futuremedia.work/disclaimer.html">免责声明</a> 
     </div>
     <div id="footer2">
-      <span id="runday"></span>
-      <span>本站由<a href="https://www.futuremedia.work/cdn-cgi/l/email-protection#553320212027303830313c3467656c65153238343c397b363a38" target="_blank">疯子</a>维护</span>
+      
+      <span>Futuremedia.Work-专注中年人 本站由<a href="https://www.futuremedia.work/cdn-cgi/l/email-protection#553320212027303830313c3467656c65153238343c397b363a38" target="_blank">疯子</a>维护</span>
     </div>
   </div>
 </footer>
