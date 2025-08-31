@@ -1,4 +1,4 @@
-name: Build, Push, and Deploy Docker Image (Diagnostic Mode)
+name: Build, Push, and Deploy Docker Image
 
 on:
   push:
@@ -29,10 +29,6 @@ jobs:
         repository: granthuang999/pansou
         path: backend
 
-    # 诊断步骤A：让我们看看两个仓库检出后的文件结构
-    - name: "[DIAGNOSTIC] List all files after checkout"
-      run: ls -R
-
     # 步骤3: 设置 Node.js 环境并构建前端
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -40,14 +36,10 @@ jobs:
         node-version: '18'
 
     - name: Install and Build Frontend
-      # [核心修正] 根据您 pansou-web 的真实结构，npm命令应在根目录运行
+      # [核心修正] 直接在工作区根目录运行，因为 package.json 就在这里
       run: |
         npm install
         npm run build
-
-    # 诊断步骤B：让我们看看前端构建后，dist文件夹是否被正确生成
-    - name: "[DIAGNOSTIC] List files after frontend build"
-      run: ls -R
 
     # 步骤4: 设置 Go 环境并构建后端
     - name: Setup Go
@@ -59,22 +51,19 @@ jobs:
       working-directory: ./backend
       run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o pansou-amd64 .
 
-    # 诊断步骤C：让我们看看后端编译后，pansou-amd64文件是否被正确生成
-    - name: "[DIAGNOSTIC] List files after backend build"
-      run: ls -R ./backend
-
     # 步骤5: 准备Docker构建上下文
     - name: Prepare Build Context
       run: |
         mkdir -p build-context
+        # [核心修正] 使用正确的源路径
         cp -r dist/ build-context/frontend-dist
-        cp backend/pansou-amd64 build-context/pansou-amd64
+        cp backend/pansou-amd64 build-context/pansou
+        # [核心修正] Dockerfile和start.sh位于根目录
         cp Dockerfile build-context/
         cp start.sh build-context/
-
-    # 诊断步骤D：让我们看看最终的构建材料是否都已备齐
-    - name: "[DIAGNOSTIC] List files in build-context"
-      run: ls -R ./build-context
+        # [核心修正] 复制nginx配置和证书
+        cp nginx.conf build-context/
+        cp -r certs/ build-context/
 
     # 步骤6: 登录到GitHub容器镜像库
     - name: Log in to GitHub Container Registry
@@ -119,7 +108,7 @@ jobs:
           sudo docker rm pansou || true
 
           echo ">>> Starting new container..."
-          sudo docker run -d --name pansou -p 80:80 --restart=always ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          sudo docker run -d --name pansou -p 80:80 -p 443:443 --restart=always ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
           echo "🎉 Deployment successful!"
         EOF
