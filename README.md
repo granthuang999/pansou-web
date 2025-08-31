@@ -6,8 +6,6 @@
 
 ## 快速开始
 
-### 一键启动
-
 ```bash
 docker run -d --name pansou -p 80:80 ghcr.io/fish2018/pansou-web
 ```
