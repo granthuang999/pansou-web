@@ -1,14 +1,14 @@
-# --- 最终的、支持HTTPS的Dockerfile ---
+# --- 最终的、支持HTTPS的、基于正确文件结构的Dockerfile ---
 
 # 阶段一：构建前端
 FROM node:18-alpine as builder
-WORKDIR /app/frontend
+WORKDIR /app
 # 复制 package.json 等依赖说明文件
-COPY frontend/package*.json ./
+COPY package*.json ./
 # 安装依赖
 RUN npm install
 # 复制所有前端源代码
-COPY frontend/ .
+COPY . .
 # 执行构建
 RUN npm run build
 
@@ -18,8 +18,8 @@ FROM nginx:alpine
 # 设置工作目录
 WORKDIR /app
 
-# 从第一阶段，复制编译好的前端文件到Nginx的默认网站目录
-COPY --from=builder /app/frontend/dist /usr/share/nginx/html
+# [核心修正] 从第一阶段，复制编译好的前端文件到Nginx的默认网站目录
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 # 复制我们全新的、支持HTTPS的Nginx配置文件
 COPY nginx.conf /etc/nginx/nginx.conf
