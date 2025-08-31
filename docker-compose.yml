@@ -1,48 +1,14 @@
-version: '3.8'
-
 services:
   pansou:
     image: ghcr.io/granthuang999/pansou-web:latest
     container_name: pansou-app
     ports:
-      - "80:80"
-      - "443:443"
+      - "127.0.0.1:8888:80"   # 容器只对本机开放，不直接暴露公网 80
     environment:
-      # 基础配置
       - DOMAIN=pansou.futuremedia.work
       - PANSOU_PORT=8888
       - PANSOU_HOST=127.0.0.1
-
-      # 如果你要自定义频道，可以取消注释
-      # - CHANNELS=tgsearchers3,yunpanxunlei,BaiduCloudDisk
-
-      # 如果需要代理（比如访问 TG），取消注释
-      # - SOCKS5_PROXY=socks5://127.0.0.1:1080
-      # - HTTP_PROXY=http://proxy:8080
-      # - HTTPS_PROXY=https://proxy:8080
-
-      # 性能配置（一般默认即可）
-      # - CACHE_ENABLED=true
-      # - CACHE_TTL=3600
-      # - MAX_CONCURRENCY=200
-      # - MAX_PAGES=30
-
     volumes:
       - /opt/pansou/data:/app/data
       - /opt/pansou/logs:/app/logs
-      - /opt/pansou/ssl:/app/data/ssl   # 手动证书放这里
-
     restart: unless-stopped
-
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-volumes:
-  pansou-data:
-    driver: local
-  pansou-logs:
-    driver: local
