@@ -1,8 +1,11 @@
 name: Build, Push, and Deploy Docker Image
 
 on:
+  # 当您向 main 分支提交代码时自动触发
   push:
     branches: [ main ]
+  # [核心修改] 增加了这一行，允许您从Actions页面手动触发
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
@@ -45,7 +48,6 @@ jobs:
   deploy:
     name: Deploy to Google Cloud
     runs-on: ubuntu-latest
-    # [核心] 只有在 build-and-push 成功后，才运行此任务
     needs: build-and-push 
 
     steps:
@@ -66,7 +68,6 @@ jobs:
           sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
           echo ">>> Stopping and removing old container..."
-          # 增加 '|| true' 是为了在容器不存在时不报错
           sudo docker stop pansou || true 
           sudo docker rm pansou || true
 
