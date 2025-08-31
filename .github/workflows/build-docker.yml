@@ -18,19 +18,19 @@ jobs:
       packages: write
 
     steps:
-    # 步骤1: 检出前端代码 (您的 pansou-web 仓库) 到工作区根目录
+    # 步骤1: 检出前端代码 (您的 pansou-web 仓库)
     - name: Checkout Frontend Repository
       uses: actions/checkout@v4
 
-    # 步骤2: 检出后端代码 (您的 pansou 仓库) 到一个名为 "backend" 的子目录
+    # 步骤2: 检出后端代码 (您的 pansou 仓库)
     - name: Checkout Backend Repository
       uses: actions/checkout@v4
       with:
         repository: granthuang999/pansou
         path: backend
 
-    # [新增] 调试步骤：打印出完整的文件结构，让我们亲眼看到真相
-    - name: List files in the workspace
+    # [新增] 调试步骤：打印出完整的文件结构
+    - name: List files for debugging
       run: ls -R
 
     # 步骤3: 设置 Node.js 环境并构建前端
@@ -40,7 +40,7 @@ jobs:
         node-version: '18'
 
     - name: Install and Build Frontend
-      # [核心修正] 直接在工作区根目录运行，因为 package.json 就在这里
+      working-directory: ./frontend
       run: |
         npm install
         npm run build
@@ -52,7 +52,6 @@ jobs:
         go-version: '1.23'
 
     - name: Build Backend
-      # [核心修正] 在 "backend" 子目录中运行
       working-directory: ./backend
       run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o pansou-amd64 .
 
@@ -60,9 +59,9 @@ jobs:
     - name: Prepare Build Context
       run: |
         mkdir -p build-context
-        # [核心修正] 使用正确的源路径
-        cp -r dist/ build-context/frontend-dist
-        cp backend/pansou-amd64 build-context/pansou
+        cp -r frontend/dist/ build-context/frontend-dist
+        # [核心修正] 保持原始文件名，不再错误地重命名
+        cp backend/pansou-amd64 build-context/pansou-amd64
         cp Dockerfile build-context/
         cp start.sh build-context/
 
