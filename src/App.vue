@@ -355,18 +355,17 @@ onUnmounted(() => {
         
         <!-- 导航菜单 -->
         <nav class="flex items-center gap-2" v-if="currentPage === 'search'">
-          <button 
-            @click="switchToStatus"
-            class="nav-button"
-          >
-            <span class="nav-icon">📊</span>
-            状态
-          </button>
+            <a href="https://www.futuremedia.work/tag.html#身心健康">身心健康</a>
+            <a href="https://www.futuremedia.work/tag.html#投资理财">投资理财</a>
+            <a href="https://www.futuremedia.work/tag.html#学习成长">学习成长</a>
+            <a href="https://www.futuremedia.work/tag.html#潮流工具">潮流工具</a>
+            <a href="https://www.futuremedia.work/tag.html#其他话题">其他话题</a>
+            <a href="https://www.futuremedia.work/about.html">关于本站</a>
           <button 
             @click="switchToDocs"
             class="nav-button"
           >
-            <a href="https://pansou.futuremedia.work/" title="首页" style="text-decoration: none; color: inherit;">
+            <a href="https://wwww.futuremedia.work/" title="首页" style="text-decoration: none; color: inherit;">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
         <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z"></path>
     </svg>
