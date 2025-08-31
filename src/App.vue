@@ -349,7 +349,7 @@ onUnmounted(() => {
             </svg>
           </div>
           <div>
-            <h1 class="text-xl font-bold">盘搜-未来传媒</h1>
+            <h1 class="text-xl font-bold">网盘搜索-未来传媒-专注中年人</h1>
           </div>
         </div>
         
@@ -365,7 +365,7 @@ onUnmounted(() => {
             @click="switchToDocs"
             class="nav-button"
           >
-            <a href="https://wwww.futuremedia.work/" title="首页" style="text-decoration: none; color: inherit;">
+            <a href="https://www.futuremedia.work/" title="首页" style="text-decoration: none; color: inherit;">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
         <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z"></path>
     </svg>
