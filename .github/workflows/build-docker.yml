@@ -38,7 +38,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     # 步骤4: [核心] 直接构建并推送Docker镜像
-    # Dockerfile会处理所有编译工作
+    # 我们将信任并使用您仓库中最新的Dockerfile来完成所有编译工作
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
@@ -65,7 +65,10 @@ jobs:
       run: |
         ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo ">>> Logged in to server"
+
           echo ">>> Pulling latest Docker image..."
+          # [核心修正] 登录到您自己的私有镜像库
+          echo ${{ secrets.GITHUB_TOKEN }} | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
           sudo docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
           echo ">>> Stopping and removing old container..."
@@ -77,3 +80,5 @@ jobs:
 
           echo "🎉 Deployment successful!"
         EOF
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
