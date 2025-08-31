@@ -29,10 +29,6 @@ jobs:
         repository: granthuang999/pansou
         path: backend
 
-    # [新增] 调试步骤：打印出完整的文件结构
-    - name: List files for debugging
-      run: ls -R
-
     # 步骤3: 设置 Node.js 环境并构建前端
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -40,6 +36,7 @@ jobs:
         node-version: '18'
 
     - name: Install and Build Frontend
+      # [核心修正] 明确指定在 frontend 子目录中运行
       working-directory: ./frontend
       run: |
         npm install
@@ -59,9 +56,10 @@ jobs:
     - name: Prepare Build Context
       run: |
         mkdir -p build-context
+        # [核心修正] 使用正确的前端构建产物路径
         cp -r frontend/dist/ build-context/frontend-dist
-        # [核心修正] 保持原始文件名，不再错误地重命名
-        cp backend/pansou-amd64 build-context/pansou-amd64
+        cp backend/pansou-amd64 build-context/pansou
+        # [核心修正] Dockerfile和start.sh位于根目录
         cp Dockerfile build-context/
         cp start.sh build-context/
 
