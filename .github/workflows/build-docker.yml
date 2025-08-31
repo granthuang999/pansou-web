@@ -18,7 +18,7 @@ jobs:
       packages: write
 
     steps:
-    # 步骤1: 检出前端仓库 (pansou-web) 到工作区根目录
+    # 步骤1: 检出前端仓库 (pansou-web)
     - name: Checkout Frontend Repository
       uses: actions/checkout@v4
 
@@ -29,43 +29,7 @@ jobs:
         repository: granthuang999/pansou
         path: backend
 
-    # 步骤3: 设置 Node.js 环境并构建前端
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-
-    - name: Install and Build Frontend
-      # [核心修正] 直接在工作区根目录运行，因为 package.json 就在这里
-      run: |
-        npm install
-        npm run build
-
-    # 步骤4: 设置 Go 环境并构建后端
-    - name: Setup Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.23'
-
-    - name: Build Backend
-      working-directory: ./backend
-      run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o pansou-amd64 .
-
-    # 步骤5: 准备Docker构建上下文
-    - name: Prepare Build Context
-      run: |
-        mkdir -p build-context
-        # [核心修正] 使用正确的源路径
-        cp -r dist/ build-context/frontend-dist
-        cp backend/pansou-amd64 build-context/pansou
-        # [核心修正] Dockerfile和start.sh位于根目录
-        cp Dockerfile build-context/
-        cp start.sh build-context/
-        # [核心修正] 复制nginx配置和证书
-        cp nginx.conf build-context/
-        cp -r certs/ build-context/
-
-    # 步骤6: 登录到GitHub容器镜像库
+    # 步骤3: 登录到GitHub容器镜像库
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
@@ -73,11 +37,12 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    # 步骤7: 构建并推送Docker镜像
+    # 步骤4: [核心] 直接构建并推送Docker镜像
+    # Dockerfile会处理所有编译工作
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./build-context
+        context: . # 使用仓库根目录作为构建上下文
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
