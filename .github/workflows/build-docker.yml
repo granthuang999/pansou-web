@@ -32,30 +32,38 @@ jobs:
         path: pansou
 
     # 步骤3: 设置 Node.js 环境并构建前端
-    - name: Setup Node.js and Build Frontend
-      run: |
-        cd pansou-web/frontend
-        npm install
-        npm run build
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install Frontend Dependencies
+      # [核心修正] 使用 working-directory
+      working-directory: ./pansou-web/frontend
+      run: npm install
+
+    - name: Build Frontend
+      # [核心修正] 使用 working-directory
+      working-directory: ./pansou-web/frontend
+      run: npm run build
 
     # 步骤4: 设置 Go 环境并构建后端
-    - name: Setup Go and Build Backend
-      run: |
-        # 安装正确的 Go 版本
-        sudo apt-get update && sudo apt-get install -y golang-1.21-go
-        # 编译
-        cd pansou
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 /usr/lib/go-1.21/bin/go build -o pansou-amd64 .
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.23' # 使用一个较新的Go版本
 
-    # 步骤5: [核心修正] 准备Docker构建上下文
+    - name: Build Backend
+      # [核心修正] 使用 working-directory
+      working-directory: ./pansou
+      run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o pansou-amd64 .
+
+    # 步骤5: 准备Docker构建上下文
     - name: Prepare Build Context
       run: |
         mkdir -p build-context
-        # 复制编译好的前端文件
         cp -r pansou-web/frontend/dist/ build-context/frontend-dist
-        # 复制编译好的后端文件
         cp pansou/pansou-amd64 build-context/pansou
-        # 复制Dockerfile和启动脚本
         cp pansou-web/Dockerfile build-context/
         cp pansou-web/start.sh build-context/
 
@@ -71,7 +79,6 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        # 使用我们准备好的构建上下文
         context: ./build-context
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
