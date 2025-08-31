@@ -433,29 +433,23 @@ onUnmounted(() => {
     </main>
     
     <!-- 页脚 -->
-    <footer class="border-t border-border bg-background/50 backdrop-blur-sm mt-auto">
-    <div id="footer"><div id="footer1">Copyright all reserved © 2025-future <a href="https://www.futuremedia.work">未来传媒</a><br>
-<a href="https://www.futuremedia.work/about.html">关于本站</a> |
-<a href="https://www.futuremedia.work/terms-of-service.html">服务条款</a> |  
-<a href="https://www.futuremedia.work/privacy-policy.html">隐私政策</a> |
-<a href="https://www.futuremedia.work/disclaimer.html">免责声明</a> 
-</div>
-<div id="footer2">
-    <span id="runday"></span><span>本站由<a href="https://www.futuremedia.work/cdn-cgi/l/email-protection#553320212027303830313c3467656c65153238343c397b363a38" target="_blank">疯子</a>维护</span>
-</div>
+<footer class="border-t border-border bg-background/50 backdrop-blur-sm mt-auto text-center">
+  <div id="footer">
+    <div id="footer1">
+      Copyright all reserved © <span id="copyrightYear"></span>-future 
+      <a href="https://www.futuremedia.work">未来传媒</a><br>
+      <a href="https://www.futuremedia.work/about.html">关于本站</a> |
+      <a href="https://www.futuremedia.work/terms-of-service.html">服务条款</a> |  
+      <a href="https://www.futuremedia.work/privacy-policy.html">隐私政策</a> |
+      <a href="https://www.futuremedia.work/disclaimer.html">免责声明</a> 
+    </div>
+    <div id="footer2">
+      <span id="runday"></span>
+      <span>本站由<a href="https://www.futuremedia.work/cdn-cgi/l/email-protection#553320212027303830313c3467656c65153238343c397b363a38" target="_blank">疯子</a>维护</span>
+    </div>
+  </div>
+</footer>
 
-<script data-cfasync="false" src="https://www.futuremedia.work/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-var now=new Date();
-document.getElementById("copyrightYear").innerHTML=now.getFullYear();
-
-if("6/4/2025"!=""){
-    var startSite=new Date("6/4/2025");
-    var diff=now.getTime()-startSite.getTime();
-    var diffDay=Math.floor(diff/(1000*60*60*24));
-    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
-}
-</script></div>
-    </footer>
   </div>
 </template>
 
@@ -544,4 +538,8 @@ footer button {
   color: inherit;
   cursor: pointer;
 }
+  #footer {
+  text-align: center;
+}
+
 </style>
