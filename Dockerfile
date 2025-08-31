@@ -1,49 +1,40 @@
-# --- 最终的、支持HTTPS的、多阶段构建的Dockerfile (V2.0) ---
-
-# === 阶段一：构建前端 (Build Frontend) ===
-FROM node:18-alpine AS frontend-builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-# === 阶段二：构建后端 (Build Backend) ===
-FROM golang:1.23-alpine AS backend-builder
-WORKDIR /src
-COPY ./backend .
-RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/pansou .
-
-# === 阶段三：准备最终的运行环境 (Final Stage) ===
 FROM nginx:alpine
 
 # 安装必要的运行时依赖
-RUN apk add --no-cache curl
+RUN apk add --no-cache ca-certificates tzdata curl
 
-# 设置工作目录
+# 设置时区
+ENV TZ=Asia/Shanghai
+
+# 创建应用目录
 WORKDIR /app
 
-# [核心] 从后端构建阶段，复制编译好的后端程序
-COPY --from=backend-builder /app/pansou /app/pansou
+# [核心修改] 复制您的SSL证书到start.sh期望的位置
+COPY certs /app/data/ssl
 
-# [核心] 从前端构建阶段，复制编译好的前端文件到Nginx的默认网站目录
-COPY --from=frontend-builder /app/dist /usr/share/nginx/html
+# 复制后端二进制文件 (它将在构建上下文中由GitHub Action提供)
+COPY pansou-amd64 /app/pansou
+RUN chmod +x /app/pansou
 
-# [核心] 复制我们之前写好的、支持HTTPS的Nginx配置文件到正确的主配置文件路径
-COPY nginx.conf /etc/nginx/nginx.conf
+# 复制前端构建产物
+COPY frontend-dist /app/frontend/dist/
 
-# [核心] 复制您的SSL证书
-COPY certs/ /etc/nginx/certs/
+# 复制启动脚本
+COPY start.sh /app/
+RUN chmod +x /app/start.sh
 
-# [核心] 复制我们全新的、极简的启动脚本
-COPY start.sh /app/start.sh
+# 创建必要的目录
+RUN mkdir -p /app/data /app/logs /var/log/nginx /etc/nginx/conf.d
 
-# 赋予执行权限
-RUN chmod +x /app/pansou /app/start.sh
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost/api/health || exit 1
 
-# 暴露80 (HTTP) 和 443 (HTTPS) 两个端口
+# 暴露端口
 EXPOSE 80 443
+
+# 设置卷挂载点
+VOLUME ["/app/data", "/app/logs"]
 
 # 设置启动命令
 CMD ["/app/start.sh"]
