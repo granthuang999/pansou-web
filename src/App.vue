@@ -338,7 +338,7 @@ onUnmounted(() => {
 /* [ADDED] 新增页眉样式 */
 .page-header {
     position: relative;
-    background-image: url('/images/header-bg.png'); /* 确保这个路径在你的 public 文件夹下是可访问的 */
+    background-image: url('https://www.futuremedia.work/images/header-bg.png'); /* 确保这个路径在你的 public 文件夹下是可访问的 */
     background-size: cover;
     background-position: center center;
     padding: 1.5rem 1.5rem;
