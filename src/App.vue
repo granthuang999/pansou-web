@@ -246,15 +246,17 @@ onUnmounted(() => {
     
     <header id="header" class="page-header">
       <nav class="header-nav-menu">
-        <a href="https://www.futuremedia.work/">首页</a>
-        <a href="https://www.futuremedia.work/tag.html#身心健康">身心健康</a>
-        <a href="https://www.futuremedia.work/tag.html#投资理财">投资理财</a>
-        <a href="https://www.futuremedia.work/tag.html#学习成长">学习成长</a>
-        <a href="https://www.futuremedia.work/tag.html#潮流工具">潮流工具</a>
-        <a href="https://www.futuremedia.work/tag.html#其他话题">其他话题</a>
-        <a href="http://pansou.futuremedia.work">网盘搜索</a>
-        <a href="https://www.futuremedia.work/about.html">关于本站</a>
-        <a href="#" @click.prevent title="将本站加入收藏夹">收藏本站</a>
+            <a href="https://www.futuremedia.work/">首页</a>
+            <a href="https://www.futuremedia.work/tag.html#身心健康">健康</a>
+            <a href="https://www.futuremedia.work/tag.html#投资理财">赚钱</a>
+            <a href="https://www.futuremedia.work/tag.html#学习成长">修行</a>
+            <a href="https://www.futuremedia.work/tag.html#潮流工具">未来</a>
+            <a href="https://www.futuremedia.work/tag.html#其他话题">其他</a>
+            <a href="https://english-study.futuremedia.work">英语</a>
+            <a href="https://www.futuremedia.work/tools-link.html#其他话题">AI</a>
+            <a href="http://pansou.futuremedia.work">盘搜</a>
+            <a href="https://www.futuremedia.work/about.html">关于本站</a>
+            <a href="javascript:void(0);" onclick="addFavorite();" title="将本站加入收藏夹">收藏本站</a>
       </nav>
 
       <div class="header-main-content">
